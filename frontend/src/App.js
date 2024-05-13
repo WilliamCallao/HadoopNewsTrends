@@ -4,10 +4,12 @@ function App() {
   const [inputText, setInputText] = useState('');
   const [logs, setLogs] = useState([]);
   const [result, setResult] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleSendText = async () => {
     setLogs([]); // Limpiar logs anteriores
     setResult(''); // Limpiar el resultado anterior
+    setLoading(true); // Activar el indicador de carga
 
     try {
       const response = await fetch('http://localhost:3001/process-text', {
@@ -26,6 +28,8 @@ function App() {
       }
     } catch (error) {
       setLogs(['Error al procesar texto: ' + error.message]);
+    } finally {
+      setLoading(false); // Desactivar el indicador de carga
     }
   };
 
@@ -45,6 +49,11 @@ function App() {
         >
           Procesar Texto
         </button>
+        {loading && (
+          <div className="mt-2 w-full flex justify-center">
+            <div className="loader border-t-transparent border-solid rounded-full border-white border-4 h-6 w-6 animate-spin"></div>
+          </div>
+        )}
         {result && (
           <div className="mt-2 p-2 bg-gray-700 text-green-400 rounded">
             Resultado: {result}

@@ -168,13 +168,14 @@ const processResults = (fileContent) => {
 // executeScripts();
 
 async function executeWorkflow(text, logCallback) {
-  logCallback('Iniciando el flujo de trabajo con el texto proporcionado...');
+  // logCallback('Iniciando el flujo de trabajo con el texto proporcionado...');
   await uploadAndProcessFile(text);
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simula un proceso
+  // await new Promise(resolve => setTimeout(resolve, 1000)); // Simula un proceso
   const fileContent = await fetchFileContent();
   processResults(fileContent);
+  await cleanUpResources();
   // logCallback('Proceso completsado. Devolviendo resultado por defecto.');
-  // return 'Este es el resultado por defecto';
+  return 'Este es el fin';
 }
 
 module.exports = { executeWorkflow };
