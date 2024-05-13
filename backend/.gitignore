@@ -1,0 +1,25 @@
+# Dependencias
+node_modules/
+
+# Archivos de entorno
+.env
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Directorios específicos de sistemas operativos
+.DS_Store    # Archivos específicos de macOS
+Thumbs.db    # Archivos específicos de Windows
+db.json      # Si usas json-server o similar
+
+# Directorios de depuración y producción
+/dist
+/tmp
+/build
+
+# Otros archivos y directorios
+config.json  # Si contienes configuraciones que no deben ser compartidas
+coverage/    # Información sobre la cobertura de tests
