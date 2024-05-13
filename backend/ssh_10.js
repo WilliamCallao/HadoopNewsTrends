@@ -146,7 +146,7 @@ const processResults = (fileContent) => {
   wordFrequencies.sort((a, b) => b.frecuencia - a.frecuencia);
   let topWords = wordFrequencies.slice(0, 30);
   topWords.forEach((item, index) => {
-    console.log(`${index + 1}. ${item.palabra} - ${item.frecuencia}`);
+    console.log(`conso ${index + 1}. ${item.palabra} - ${item.frecuencia}`);
   });
 };
 
@@ -167,18 +167,34 @@ const processResults = (fileContent) => {
 
 // executeScripts();
 
-async function executeWorkflow(text) {
-  console.log('Iniciando el flujo de trabajo con el texto proporcionado...');
-  try {
-    await uploadAndProcessFile(text);
-    const fileContent = await fetchFileContent();
-    console.log('Resultado del procesamiento:', fileContent);
-    processResults(fileContent);
-    await cleanUpResources();
-    console.log('Flujo de trabajo completado exitosamente.');
-  } catch (err) {
-    console.error('Error durante el flujo de trabajo:', err);
-  }
+async function executeWorkflow(text, logCallback) {
+  logCallback('Iniciando el flujo de trabajo con el texto proporcionado...');
+  await uploadAndProcessFile(text);
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simula un proceso
+  const fileContent = await fetchFileContent();
+  processResults(fileContent);
+  // logCallback('Proceso completsado. Devolviendo resultado por defecto.');
+  // return 'Este es el resultado por defecto';
 }
 
 module.exports = { executeWorkflow };
+
+
+// async function executeScripts(text, logCallback) {
+//   try {
+//     console.log('//////SCRIPT 1');
+//     logCallback('Proceso completsado. Devolviendo resultado por defecto.');
+//     return 'Este es el resultado por defecto';
+//     // await uploadAndProcessFile(text);
+//     // console.log('//////SCRIPT 2');
+//     // const fileContent = await fetchFileContent();
+//     // console.log('RESPUESTA', fileContent);
+//     // processResults(fileContent);
+//     // console.log('//////SCRIPT 3');
+//     // await cleanUpResources();
+//   } catch (err) {
+//     console.error('Error en la ejecución de los scripts:', err);
+//   }
+// }
+
+// module.exports = { executeScripts };
