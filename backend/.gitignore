@@ -23,3 +23,5 @@ db.json      # Si usas json-server o similar
 # Otros archivos y directorios
 config.json  # Si contienes configuraciones que no deben ser compartidas
 coverage/    # Información sobre la cobertura de tests
+/frontend/node_modules/
+/backend/node_modules/
