@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 function App() {
   const [inputText, setInputText] = useState('');
   const [logs, setLogs] = useState([]);
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSendText = async () => {
-    setLogs([]); // Limpiar logs anteriores
-    setResult(''); // Limpiar el resultado anterior
-    setLoading(true); // Activar el indicador de carga
+    setLogs([]);
+    setResult([]);
+    setLoading(true);
 
     try {
       const response = await fetch('http://localhost:3001/process-text', {
@@ -29,7 +29,7 @@ function App() {
     } catch (error) {
       setLogs(['Error al procesar texto: ' + error.message]);
     } finally {
-      setLoading(false); // Desactivar el indicador de carga
+      setLoading(false);
     }
   };
 
@@ -54,17 +54,18 @@ function App() {
             <div className="loader border-t-transparent border-solid rounded-full border-white border-4 h-6 w-6 animate-spin"></div>
           </div>
         )}
-        {result && (
+        {result.length > 0 && (
           <div className="mt-2 p-2 bg-gray-700 text-green-400 rounded">
-            Resultado: {result}
+            <h3 className="text-lg font-semibold">Resultado:</h3>
+            <ul className="list-disc list-inside">
+              {result.map((item, index) => (
+                <li key={index}>
+                  {item.palabra}: {item.frecuencia}
+                </li>
+              ))}
+            </ul>
           </div>
         )}
-        <div className="mt-4 p-2 bg-gray-800 border border-gray-700 rounded">
-          <h3 className="text-lg font-semibold">Logs:</h3>
-          {logs.map((log, index) => (
-            <div key={index} className="text-sm text-gray-400">{log}</div>
-          ))}
-        </div>
       </div>
     </div>
   );

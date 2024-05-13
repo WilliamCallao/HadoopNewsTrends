@@ -3,10 +3,10 @@ const SftpClient = require('ssh2-sftp-client');
 const fs = require('fs');
 
 const connectionSettings = {
-  host: '127.0.0.1', // Cambiar a la dirección IP de tu máquina local
-  port: 22022,        // Cambiar al puerto utilizado para SSH en tu máquina local
-  username: 'hadoop', // Tu nombre de usuario en la máquina virtual CentOS 7
-  password: 'hadoop'  // Tu contraseña para la máquina virtual CentOS 7
+  host: '127.0.0.1', 
+  port: 22022,      
+  username: 'hadoop',
+  password: 'hadoop'
 };
 
 const uploadAndProcessFile = (fileContent) => {

@@ -1,30 +1,30 @@
 const express = require('express');
 const cors = require('cors');
-const { executeWorkflow } = require('./ssh_10'); // Asegúrate de que este archivo esté configurado correctamente
+const { executeWorkflow } = require('./ssh_11');
 
 const app = express();
+const port = 3001;
 
-app.use(express.json()); // Usar el analizador de JSON integrado de Express
-app.use(cors()); // Habilitar CORS
+app.use(express.json());
 
-// Endpoint para procesar texto
+app.use(cors());
+
 app.post('/process-text', async (req, res) => {
-  const { text } = req.body; // Asume que el texto viene en el cuerpo de la petición como { text: "ejemplo" }
+  const { text } = req.body;
 
   if (!text) {
-    return res.status(400).send({ error: 'Texto vacío o inválido.' });
+    return res.status(400).json({ error: 'Text is required' });
   }
 
   try {
-    const result = await executeWorkflow(text, (msg) => console.log(msg));
-    res.send({ result });
+    const result = await executeWorkflow(text);
+    res.json({ result });
   } catch (error) {
-    console.error('Error durante el flujo de trabajo:', error);
-    res.status(500).send({ error: 'Error procesando el texto.' });
+    console.error('Error during the workflow execution:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}`);
 });
