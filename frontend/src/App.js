@@ -1,16 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
   const [inputText, setInputText] = useState('');
+  const [logs, setLogs] = useState([]);
   const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:3001');
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'log') {
+        setLogs((prevLogs) => [...prevLogs, data.message]);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onopen = () => {
+      console.log('WebSocket connection opened');
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
   const handleSendText = async () => {
-    setResult([]);
-    setLoading(true);
+    setLogs([]); 
+    setResult([]); 
+    setLoading(true); 
 
     const sanitizedText = sanitizeText(inputText);
-    // const sanitizedText = inputText;
+
     try {
       const response = await fetch('http://localhost:3001/process-text', {
         method: 'POST',
@@ -21,11 +50,13 @@ function App() {
       });
       const data = await response.json();
       if (response.ok) {
+        setLogs(['Proceso completado. Resultado recibido.']);
         setResult(data.result);
       } else {
         throw new Error(data.error || 'Error desconocido');
       }
     } catch (error) {
+      setLogs(['Error al procesar texto: ' + error.message]);
     } finally {
       setLoading(false);
     }
@@ -72,6 +103,12 @@ function App() {
             </ul>
           </div>
         )}
+        <div className="mt-4 p-2 bg-gray-800 border border-gray-700 rounded">
+          <h3 className="text-lg font-semibold">Logs:</h3>
+          {logs.map((log, index) => (
+            <div key={index} className="text-sm text-gray-400">{log}</div>
+          ))}
+        </div>
       </div>
     </div>
   );

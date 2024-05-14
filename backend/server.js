@@ -1,13 +1,31 @@
 const express = require('express');
+const http = require('http');
+const WebSocket = require('ws');
 const cors = require('cors');
-const { executeWorkflow } = require('./ssh_11');
+const { executeWorkflow, setWebSocket } = require('./ssh_11'); 
 
 const app = express();
 const port = 3001;
 
 app.use(express.json());
+app.use(cors({ origin: 'http://localhost:3000' }));
 
-app.use(cors());
+const server = http.createServer(app);
+
+const wss = new WebSocket.Server({ server });
+
+wss.on('connection', (ws) => {
+  console.log('Cliente WebSocket conectado');
+  setWebSocket(ws);
+
+  ws.on('message', (message) => {
+    console.log('Mensaje recibido del cliente:', message);
+  });
+
+  ws.on('close', () => {
+    console.log('Cliente WebSocket desconectado');
+  });
+});
 
 app.post('/process-text', async (req, res) => {
   const { text } = req.body;
@@ -25,6 +43,6 @@ app.post('/process-text', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });

@@ -2,13 +2,16 @@ const { Client } = require('ssh2');
 const SftpClient = require('ssh2-sftp-client');
 const fs = require('fs');
 const path = require('path');
+const WebSocket = require('ws');
 
 const connectionSettings = {
-  host: '127.0.0.1', 
-  port: 22022,      
+  host: '127.0.0.1',
+  port: 22022,
   username: 'hadoop',
   password: 'hadoop'
 };
+
+let ws;
 
 const uploadAndProcessFile = (fileContent) => {
   return new Promise((resolve, reject) => {
@@ -16,29 +19,29 @@ const uploadAndProcessFile = (fileContent) => {
     const sftp = new SftpClient();
 
     sshClient.on('ready', () => {
-      console.log('Conexión establecida. Subiendo archivo al home...');
+      logMessage('Conexión establecida. Subiendo archivo al home...');
       sftp.connect(connectionSettings)
         .then(() => sftp.put(Buffer.from(fileContent), '/home/hadoop/texto.txt'))
         .then(() => {
-          console.log('Archivo subido al home exitosamente.');
+          logMessage('Archivo subido al home exitosamente.');
           const moveCommand = 'hdfs dfs -put /home/hadoop/texto.txt /input';
-          console.log('Moviendo archivo a /input...');
+          logMessage('Moviendo archivo a /input...');
           return execCommand(sshClient, moveCommand);
         })
         .then(() => {
-          console.log('Archivo movido a /input.');
+          logMessage('Archivo movido a /input.');
           const mapReduceCommand = 'hadoop jar /opt/hadoop/hadoop-2.7.7/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.7.jar wordcount /input /output';
-          console.log('Ejecutando MapReduce...');
+          logMessage('Ejecutando MapReduce...');
           return execCommand(sshClient, mapReduceCommand);
         })
         .then(() => {
-          console.log('MapReduce completado.');
+          logMessage('MapReduce completado.');
           sftp.end();
           sshClient.end();
           resolve();
         })
         .catch(err => {
-          console.error('Error durante el proceso:', err);
+          logMessage('Error durante el proceso:', err);
           sftp.end();
           sshClient.end();
           reject(err);
@@ -53,9 +56,9 @@ const execCommand = (sshClient, command) => {
   return new Promise((resolve, reject) => {
     sshClient.exec(command, { pty: true }, (err, stream) => {
       if (err) return reject(err);
-      stream.on('data', data => console.log(data.toString()))
+      stream.on('data', data => logMessage(data.toString()))
         .on('exit', resolve)
-        .stderr.on('data', data => console.error(data.toString()));
+        .stderr.on('data', data => logMessage(data.toString()));
     });
   });
 };
@@ -66,7 +69,7 @@ const fetchFileContent = () => {
     let fileContent = '';
 
     sshClient.on('ready', () => {
-      console.log('Conexión SSH establecida. Obteniendo contenido del archivo...');
+      logMessage('Conexión SSH establecida. Obteniendo contenido del archivo...');
       const fetchCommand = 'hdfs dfs -cat /output/part-r-00000';
       sshClient.exec(fetchCommand, { pty: true }, (err, stream) => {
         if (err) {
@@ -75,7 +78,7 @@ const fetchFileContent = () => {
         }
         stream.on('data', (data) => { fileContent += data.toString(); })
           .on('close', () => {
-            console.log('Finalizada la obtención del contenido del archivo.');
+            logMessage('Finalizada la obtención del contenido del archivo.');
             sshClient.end();
             resolve(fileContent);
           });
@@ -96,15 +99,15 @@ const cleanUpResources = () => {
     ];
 
     sshClient.on('ready', () => {
-      console.log('Conexión SSH establecida. Iniciando limpieza de recursos...');
+      logMessage('Conexión SSH establecida. Iniciando limpieza de recursos...');
       execCommandsSequentially(sshClient, commands)
         .then(() => {
-          console.log('Todos los comandos se han ejecutado. Cerrando conexión SSH.');
+          logMessage('Todos los comandos se han ejecutado. Cerrando conexión SSH.');
           sshClient.end();
           resolve();
         })
         .catch(err => {
-          console.error('Error durante la limpieza de recursos:', err);
+          logMessage('Error durante la limpieza de recursos:', err);
           sshClient.end();
           reject(err);
         });
@@ -132,23 +135,34 @@ const processResults = (fileContent) => {
   return wordFrequencies;
 };
 
-  const filterStopwords = async (words) => {
-    const stopwordsPath = path.join(__dirname, 'spanish.txt');
-    const stopwords = await fs.promises.readFile(stopwordsPath, 'utf-8');
-    const stopwordsSet = new Set(stopwords.split('\n').map(word => word.trim()));
-  
-    return words.filter(word => !stopwordsSet.has(word.palabra));
-  };
+const filterStopwords = async (words) => {
+  const stopwordsPath = path.join(__dirname, 'spanish.txt');
+  const stopwords = await fs.promises.readFile(stopwordsPath, 'utf-8');
+  const stopwordsSet = new Set(stopwords.split('\n').map(word => word.trim()));
 
-  const executeWorkflow = async (text) => {
-    console.log('Iniciando el flujo de trabajo con el texto proporcionado...');
-    await uploadAndProcessFile(text);
-    const fileContent = await fetchFileContent();
-    let results = processResults(fileContent);
-    results = await filterStopwords(results);
-    await cleanUpResources();
-    console.log('Proceso completado. Devolviendo resultado.');
-    return results;
-  };
-  
-  module.exports = { executeWorkflow };
+  return words.filter(word => !stopwordsSet.has(word.palabra));
+};
+
+const executeWorkflow = async (text) => {
+  logMessage('Iniciando el flujo de trabajo con el texto proporcionado...');
+  await uploadAndProcessFile(text);
+  const fileContent = await fetchFileContent();
+  let results = processResults(fileContent);
+  results = await filterStopwords(results);
+  await cleanUpResources();
+  logMessage('Proceso completado. Devolviendo resultado.');
+  return results;
+};
+
+const logMessage = (message) => {
+  console.log(message);
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ type: 'log', message }));
+  }
+};
+
+const setWebSocket = (websocket) => {
+  ws = websocket;
+};
+
+module.exports = { executeWorkflow, setWebSocket };
