@@ -2,35 +2,41 @@ import React, { useState } from 'react';
 
 function App() {
   const [inputText, setInputText] = useState('');
-  const [logs, setLogs] = useState([]);
   const [result, setResult] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const handleSendText = async () => {
-    setLogs([]);
     setResult([]);
     setLoading(true);
 
+    const sanitizedText = sanitizeText(inputText);
+    // const sanitizedText = inputText;
     try {
       const response = await fetch('http://localhost:3001/process-text', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text: inputText })
+        body: JSON.stringify({ text: sanitizedText })
       });
       const data = await response.json();
       if (response.ok) {
-        setLogs(['Proceso completado. Resultado recibido.']);
         setResult(data.result);
       } else {
         throw new Error(data.error || 'Error desconocido');
       }
     } catch (error) {
-      setLogs(['Error al procesar texto: ' + error.message]);
     } finally {
       setLoading(false);
     }
+  };
+
+  const sanitizeText = (text) => {
+    let sanitizedText = text.toLowerCase();
+    sanitizedText = sanitizedText.replace(/[^a-záéíóúñü\s]/g, ' ');
+    sanitizedText = sanitizedText.replace(/\n/g, ' ');
+    sanitizedText = sanitizedText.replace(/\s+/g, ' ');
+    return sanitizedText.trim();
   };
 
   return (

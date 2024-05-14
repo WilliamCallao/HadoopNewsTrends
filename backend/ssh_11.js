@@ -1,6 +1,7 @@
 const { Client } = require('ssh2');
 const SftpClient = require('ssh2-sftp-client');
 const fs = require('fs');
+const path = require('path');
 
 const connectionSettings = {
   host: '127.0.0.1', 
@@ -122,21 +123,29 @@ const execCommandsSequentially = (sshClient, commands) => {
 };
 
 const processResults = (fileContent) => {
-    let lines = fileContent.split('\n').filter(line => line.trim() !== '');
-    let wordFrequencies = lines.map(line => {
-      let parts = line.trim().split(/\s+/);
-      return { palabra: parts[0], frecuencia: parseInt(parts[1], 10) };
-    });
-    wordFrequencies.sort((a, b) => b.frecuencia - a.frecuencia);
-    let topWords = wordFrequencies.slice(0, 30);
-    return topWords;
-  };
+  let lines = fileContent.split('\n').filter(line => line.trim() !== '');
+  let wordFrequencies = lines.map(line => {
+    let parts = line.trim().split(/\s+/);
+    return { palabra: parts[0], frecuencia: parseInt(parts[1], 10) };
+  });
+  wordFrequencies.sort((a, b) => b.frecuencia - a.frecuencia);
+  return wordFrequencies;
+};
+
+  const filterStopwords = async (words) => {
+    const stopwordsPath = path.join(__dirname, 'spanish.txt');
+    const stopwords = await fs.promises.readFile(stopwordsPath, 'utf-8');
+    const stopwordsSet = new Set(stopwords.split('\n').map(word => word.trim()));
   
+    return words.filter(word => !stopwordsSet.has(word.palabra));
+  };
+
   const executeWorkflow = async (text) => {
     console.log('Iniciando el flujo de trabajo con el texto proporcionado...');
     await uploadAndProcessFile(text);
     const fileContent = await fetchFileContent();
-    const results = processResults(fileContent);
+    let results = processResults(fileContent);
+    results = await filterStopwords(results);
     await cleanUpResources();
     console.log('Proceso completado. Devolviendo resultado.');
     return results;
