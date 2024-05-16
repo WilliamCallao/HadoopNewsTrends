@@ -1,74 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 
 function App() {
-  const [inputText, setInputText] = useState('');
-  const [logs, setLogs] = useState([]);
-  const [result, setResult] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [inputText, setInputText] = useState('')
+  const [logs, setLogs] = useState([])
+  const [result, setResult] = useState([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:3001');
+    const ws = new WebSocket('ws://localhost:3001')
 
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+      const data = JSON.parse(event.data)
       if (data.type === 'log') {
-        setLogs((prevLogs) => [...prevLogs, data.message]);
+        setLogs((prevLogs) => [...prevLogs, data.message])
       }
-    };
+    }
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
+      console.error('WebSocket error:', error)
+    }
 
     ws.onopen = () => {
-      console.log('WebSocket connection opened');
-    };
+      console.log('WebSocket connection opened')
+    }
 
     ws.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
+      console.log('WebSocket connection closed')
+    }
 
     return () => {
-      ws.close();
-    };
-  }, []);
+      ws.close()
+    }
+  }, [])
 
   const handleSendText = async () => {
-    setLogs([]); 
-    setResult([]); 
-    setLoading(true); 
+    setLogs([])
+    setResult([])
+    setLoading(true)
 
-    const sanitizedText = sanitizeText(inputText);
+    const sanitizedText = sanitizeText(inputText)
 
     try {
       const response = await fetch('http://localhost:3001/process-text', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: sanitizedText })
-      });
-      const data = await response.json();
+        body: JSON.stringify({ text: sanitizedText }),
+      })
+      const data = await response.json()
       if (response.ok) {
-        setLogs(['Proceso completado. Resultado recibido.']);
-        setResult(data.result);
+        setLogs(['Proceso completado. Resultado recibido.'])
+        setResult(data.result)
       } else {
-        throw new Error(data.error || 'Error desconocido');
+        throw new Error(data.error || 'Error desconocido')
       }
     } catch (error) {
-      setLogs(['Error al procesar texto: ' + error.message]);
+      setLogs(['Error al procesar texto: ' + error.message])
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const sanitizeText = (text) => {
-    let sanitizedText = text.toLowerCase();
-    sanitizedText = sanitizedText.replace(/[^a-záéíóúñü\s]/g, ' ');
-    sanitizedText = sanitizedText.replace(/\n/g, ' ');
-    sanitizedText = sanitizedText.replace(/\s+/g, ' ');
-    return sanitizedText.trim();
-  };
+    let sanitizedText = text.toLowerCase()
+    sanitizedText = sanitizedText.replace(/[^a-záéíóúñü\s]/g, ' ')
+    sanitizedText = sanitizedText.replace(/\n/g, ' ')
+    sanitizedText = sanitizedText.replace(/\s+/g, ' ')
+    return sanitizedText.trim()
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
@@ -106,12 +106,14 @@ function App() {
         <div className="mt-4 p-2 bg-gray-800 border border-gray-700 rounded">
           <h3 className="text-lg font-semibold">Logs:</h3>
           {logs.map((log, index) => (
-            <div key={index} className="text-sm text-gray-400">{log}</div>
+            <div key={index} className="text-sm text-gray-400">
+              {log}
+            </div>
           ))}
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
