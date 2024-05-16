@@ -163,15 +163,13 @@ const executeWorkflow = async (text) => {
   await delay(2000);
   
   const results = [
-    { palabra: 'Hola', frecuencia: 1 },
-    { palabra: 'mundo', frecuencia: 1 },
-    { palabra: 'Este', frecuencia: 1 },
-    { palabra: 'ejemplo', frecuencia: 1 },
-    { palabra: 'procesamiento', frecuencia: 1 },
-    { palabra: 'texto', frecuencia: 1 },
-    { palabra: 'usando', frecuencia: 1 },
-    { palabra: 'Hadoop', frecuencia: 1 },
-    { palabra: 'MapReduce', frecuencia: 1 }
+    { palabra: 'lorem', frecuencia: 5 },
+    { palabra: 'Ipsum', frecuencia: 3 },
+    { palabra: 'dolor', frecuencia: 3 },
+    { palabra: 'sit', frecuencia: 2 },
+    { palabra: 'amet', frecuencia: 1 },
+    { palabra: 'consectetur', frecuencia: 1 },
+    { palabra: 'adipiscing', frecuencia: 1 },
   ];
 
   return results;
