@@ -42,7 +42,7 @@ export const App = () => {
         </form>
       </header>
       <section className="mt-5 grid grid-cols-[250px_1fr] gap-5">
-        <aside className="h-fit rounded-lg border border-gray-300 bg-gray-50 p-5">
+        <aside className="sticky top-5 h-fit rounded-lg border border-gray-300 bg-gray-50 p-5">
           <h3 className="mb-2 text-lg font-medium text-gray-900">
             Palabras encontradas
           </h3>
@@ -73,7 +73,7 @@ export const App = () => {
             Buscar artículos
           </button>
         </aside>
-        <div className="grid gap-5">
+        <div className="mb-5 grid gap-5">
           {articles.map((article) => (
             <ArticleCard key={article.id} article={article} />
           ))}
