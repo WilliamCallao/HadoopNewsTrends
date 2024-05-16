@@ -8,26 +8,21 @@ function App() {
 
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:3001');
-
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === 'log') {
         setLogs((prevLogs) => [...prevLogs, data.message]);
       }
     };
-
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
     };
-
     ws.onopen = () => {
       console.log('WebSocket connection opened');
     };
-
     ws.onclose = () => {
       console.log('WebSocket connection closed');
     };
-
     return () => {
       ws.close();
     };

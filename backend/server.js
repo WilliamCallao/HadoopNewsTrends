@@ -2,12 +2,14 @@ const express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const { executeWorkflow, setWebSocket } = require('./ssh_11'); 
 
 const app = express();
 const port = 3001;
 
-app.use(express.json());
+// app.use(express.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors({ origin: 'http://localhost:3000' }));
 
 const server = http.createServer(app);
