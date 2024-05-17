@@ -8,6 +8,7 @@ export const App = () => {
   const [words, setWords] = useState(wordList)
   const [selectedWord, setSelectedWord] = useState('')
   const [articles] = useState(articlesData)
+  const [news, setNews] = useState([])
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
 
@@ -29,9 +30,23 @@ export const App = () => {
     console.log(`Fecha Final: ${formattedEndDate}`)
 
     try {
+      // obtener las noticias
       const response = await fetch(`http://localhost:3001/news?startDate=${formattedStartDate}&endDate=${formattedEndDate}`)
       const data = await response.json()
       console.log('Response from server:', data)
+      setNews(data)
+
+      // obtener la cadena concatenada
+      const response2 = await fetch('http://localhost:3001/concatenate-texts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ articles: data })
+      })
+      const concatenatedText = await response2.json()
+      console.log('Concatenated Text:', concatenatedText)
+
     } catch (error) {
       console.error('Error:', error)
     }

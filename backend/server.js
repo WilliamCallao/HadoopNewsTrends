@@ -16,10 +16,12 @@ app.use(cors({ origin: 'http://localhost:5173' }));
 const newsRouter = require('./routes/news');
 const concatenateDatesRouter = require('./routes/concatenateDates');
 const processTextRouter = require('./routes/processText');
+const concatenateTextsRouter = require('./routes/concatenateTexts');
 
 app.use(newsRouter);
 app.use(concatenateDatesRouter);
 app.use(processTextRouter);
+app.use(concatenateTextsRouter);
 
 // WebSocket
 const server = http.createServer(app);
