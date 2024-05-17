@@ -13,9 +13,11 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(cors({ origin: 'http://localhost:5173' }));
 
 // Rutas
+const newsRouter = require('./routes/news');
 const concatenateDatesRouter = require('./routes/concatenateDates');
 const processTextRouter = require('./routes/processText');
 
+app.use(newsRouter);
 app.use(concatenateDatesRouter);
 app.use(processTextRouter);
 

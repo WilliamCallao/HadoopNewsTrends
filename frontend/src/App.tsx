@@ -15,19 +15,21 @@ export const App = () => {
     setSelectedWord(e.target.id)
   }
 
+  const formatDateString = (date) => {
+    const [year, month, day] = date.split('-')
+    return `${day}-${month}-${year}`
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(`Fecha Inicial: ${startDate}`)
-    console.log(`Fecha Final: ${endDate}`)
+    const formattedStartDate = formatDateString(startDate)
+    const formattedEndDate = formatDateString(endDate)
+
+    console.log(`Fecha Inicial: ${formattedStartDate}`)
+    console.log(`Fecha Final: ${formattedEndDate}`)
 
     try {
-      const response = await fetch('http://localhost:3001/concatenate-dates', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ startDate, endDate })
-      })
+      const response = await fetch(`http://localhost:3001/news?startDate=${formattedStartDate}&endDate=${formattedEndDate}`)
       const data = await response.json()
       console.log('Response from server:', data)
     } catch (error) {
