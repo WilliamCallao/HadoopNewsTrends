@@ -8,21 +8,45 @@ export const App = () => {
   const [words, setWords] = useState(wordList)
   const [selectedWord, setSelectedWord] = useState('')
   const [articles] = useState(articlesData)
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
-  const onChangeSelectedWord = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeSelectedWord = (e) => {
     setSelectedWord(e.target.id)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    console.log(`Fecha Inicial: ${startDate}`)
+    console.log(`Fecha Final: ${endDate}`)
+
+    try {
+      const response = await fetch('http://localhost:3001/concatenate-dates', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ startDate, endDate })
+      })
+      const data = await response.json()
+      console.log('Response from server:', data)
+    } catch (error) {
+      console.error('Error:', error)
+    }
   }
 
   return (
     <main className="container mx-auto mt-5 min-h-screen">
       <header>
-        <form className="flex items-end gap-5 ">
+        <form className="flex items-end gap-5" onSubmit={handleSubmit}>
           <div className="flex flex-col">
             <label htmlFor="startDate">Fecha Inicial</label>
             <input
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
               id="startDate"
               type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
             />
           </div>
           <div className="flex flex-col">
@@ -31,11 +55,12 @@ export const App = () => {
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
               id="endDate"
               type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
-
           <input
-            className="w-full cursor-pointer rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto "
+            className="w-full cursor-pointer rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-auto"
             type="submit"
             value="Enviar"
           />
@@ -46,7 +71,6 @@ export const App = () => {
           <h3 className="mb-2 text-lg font-medium text-gray-900">
             Palabras encontradas
           </h3>
-
           <ul className="grid gap-1">
             {words.map((word) => (
               <li key={word}>
@@ -63,7 +87,6 @@ export const App = () => {
               </li>
             ))}
           </ul>
-
           <button
             className="my-2 w-full rounded-lg bg-gray-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300"
             onClick={() => {

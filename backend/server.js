@@ -3,48 +3,38 @@ const http = require('http');
 const WebSocket = require('ws');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const { executeWorkflow, setWebSocket } = require('./ssh_11'); 
+const { setWebSocket } = require('./ssh_11'); 
 
 const app = express();
 const port = 3001;
 
-// app.use(express.json());
+// Configuración de middleware
 app.use(bodyParser.json({ limit: '50mb' }));
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({ origin: 'http://localhost:5173' }));
 
+// Rutas
+const concatenateDatesRouter = require('./routes/concatenateDates');
+const processTextRouter = require('./routes/processText');
+
+app.use(concatenateDatesRouter);
+app.use(processTextRouter);
+
+// WebSocket
 const server = http.createServer(app);
-
 const wss = new WebSocket.Server({ server });
 
 wss.on('connection', (ws) => {
   console.log('Cliente WebSocket conectado');
   setWebSocket(ws);
-
   ws.on('message', (message) => {
     console.log('Mensaje recibido del cliente:', message);
   });
-
   ws.on('close', () => {
     console.log('Cliente WebSocket desconectado');
   });
 });
 
-app.post('/process-text', async (req, res) => {
-  const { text } = req.body;
-
-  if (!text) {
-    return res.status(400).json({ error: 'Text is required' });
-  }
-
-  try {
-    const result = await executeWorkflow(text);
-    res.json({ result });
-  } catch (error) {
-    console.error('Error during the workflow execution:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-});
-
+// Iniciar el servidor
 server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
