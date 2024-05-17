@@ -143,16 +143,40 @@ const filterStopwords = async (words) => {
   return words.filter(word => !stopwordsSet.has(word.palabra));
 };
 
+// const executeWorkflow = async (text) => {
+//   logMessage('Iniciando el flujo de trabajo con el texto proporcionado...');
+//   await uploadAndProcessFile(text);
+//   const fileContent = await fetchFileContent();
+//   let results = processResults(fileContent);
+//   results = await filterStopwords(results);
+//   await cleanUpResources();
+//   logMessage('Proceso completado. Devolviendo resultado.');
+//   return results;
+// };
+
 const executeWorkflow = async (text) => {
   logMessage('Iniciando el flujo de trabajo con el texto proporcionado...');
-  await uploadAndProcessFile(text);
-  const fileContent = await fetchFileContent();
-  let results = processResults(fileContent);
-  results = await filterStopwords(results);
-  await cleanUpResources();
-  logMessage('Proceso completado. Devolviendo resultado.');
+  await delay(2000);
+  logMessage('Se está ejecutando el proceso simulado...');
+  await delay(2000);
+  logMessage('Devolviendo resultados simulados...');
+  await delay(2000);
+  
+  const results = [
+    { palabra: 'lorem', frecuencia: 5 },
+    { palabra: 'Ipsum', frecuencia: 3 },
+    { palabra: 'dolor', frecuencia: 3 },
+    { palabra: 'sit', frecuencia: 2 },
+    { palabra: 'amet', frecuencia: 1 },
+    { palabra: 'consectetur', frecuencia: 1 },
+    { palabra: 'adipiscing', frecuencia: 1 },
+  ];
+
   return results;
 };
+
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 
 const logMessage = (message) => {
   console.log(message);

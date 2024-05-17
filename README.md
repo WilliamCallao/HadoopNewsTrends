@@ -80,7 +80,7 @@ El proyecto cuenta con una interfaz web desarrollada en React/JavaScript. La int
      ```
    - Inicia la aplicación:
      ```bash
-     npm start
+     npm run dev
      ```
 
 ## Manejo de Errores 
