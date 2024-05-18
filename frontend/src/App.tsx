@@ -46,6 +46,7 @@ export const App = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setProcessedText([]);
     const formattedStartDate = formatDateString(startDate);
     const formattedEndDate = formatDateString(endDate);
     console.log(`Fecha Inicial: ${formattedStartDate}`);

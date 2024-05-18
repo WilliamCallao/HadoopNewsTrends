@@ -30,7 +30,7 @@ caso
 equipo
 partido
 
-
+--------------
 
 ministerio
 vida
@@ -42,7 +42,313 @@ autoridades
 justicia
 ley
 
-
+-------------
+el
+la
+los
+las
+un
+una
+unos
+unas
+y
+además
+también
+asimismo
+incluso
+más aún
+pero
+sin embargo
+no obstante
+aunque
+a pesar de
+en cambio
+por el contrario
+porque
+ya que
+puesto que
+dado que
+debido a
+por lo tanto
+así que
+por consiguiente
+en consecuencia
+entonces
+primero
+luego
+después
+a continuación
+finalmente
+por último
+por ejemplo
+tal como
+así
+en particular
+como
+igual que
+de la misma manera
+es decir
+o sea
+en otras palabras
+si
+a menos que
+siempre que
+en caso de que
+para
+a fin de
+con el propósito de
+en resumen
+en síntesis
+en conclusión
+para concluir
+ni
+o
+sea
+ya
+pues
+por cuanto
+con todo
+al contrario
+aun cuando
+aun así
+por más que
+por ende
+de modo que
+de manera que
+así pues
+de ahí que
+hasta que
+desde que
+tan pronto como
+en cuanto
+desde entonces
+no solo
+sino también
+además de
+encima de
+sin contar
+para que
+a fin de que
+con el fin de
+a propósito
+por cierto
+cabe mencionar
+es más
+sobre todo
+especialmente
+específicamente
+de hecho
+realmente
+en realidad
+en efecto
+efectivamente
+claramente
+ciertamente
+obviamente
+evidentemente
+sin duda
+sin lugar a dudas
+claro
+desde luego
+naturalmente
+de ninguna manera
+en absoluto
+ni mucho menos
+menos aún
+ni siquiera
+de ningún modo
+de ninguna forma
+mientras
+siempre y cuando
+salvo que
+excepto que
+a no ser que
+si no
+a condición de que
+en el caso de que
+con tal de que
+en vista de
+a partir de
+a causa de
+como resultado de
+en base a
+visto que
+a saber
+dicho de otra manera
+más bien
+en otras circunstancias
+a medida que
+conforme
+de acuerdo con
+según
+al mismo tiempo
+simultáneamente
+mientras tanto
+antes de
+después de
+en cuanto a
+con respecto a
+en relación con
+acerca de
+a propósito de
+referente a
+en referencia a
+al respecto
+además de eso
+igualmente
+del mismo modo
+de igual manera
+por añadidura
+en suma
+en adición
+a mayor abundamiento
+en el mismo sentido
+en razón de
+a consecuencia de
+de tal manera que
+de igual forma
+de la misma manera
+de modo similar
+así como
+tanto como
+así mismo
+al igual que
+por el mismo motivo
+por las mismas razones
+en contraste
+al revés
+contrariamente
+en oposición
+a diferencia de
+diferentemente
+diversamente
+sino que
+en lugar de
+pese a
+así y todo
+de todas formas
+de todas maneras
+de todos modos
+aun con eso
+aun a sabiendas
+por razón de
+gracias a
+por tanto
+consecuentemente
+de esta forma
+de este modo
+en fin
+por lo menos
+al menos
+siquiera
+cuando menos
+por si acaso
+en el supuesto de que
+antes
+anteriormente
+al principio
+al inicio
+al comienzo
+primeramente
+inicialmente
+entre tanto
+acto seguido
+al cabo de
+previamente
+posteriormente
+apenas
+no bien
+una vez que
+cada vez que
+simultáneamente
+enseguida
+con
+en
+por
+de
+desde
+hacia
+hasta
+para
+según
+sin
+so
+sobre
+tras
+versus
+vía
+que
+mas
+o
+u
+cuando
+donde
+mientras
+tan... que
+tanto... que
+siempre que
+a no ser que
+salvo que
+excepto que
+antes de que
+después de que
+tan pronto como
+apenas
+no bien
+hasta que
+desde que
+una vez que
+cada vez que
+no
+me
+te
+nos
+se
+e
+ni
+me
+te
+se
+nos
+os
+se
+mí
+ti
+él
+ella
+ellos
+ellas
+lo
+la
+los
+las
+este
+esta
+estos
+estas
+ese
+esa
+esos
+esas
+aquel
+aquella
+aquellos
+aquellas
+quién
+qué
+dónde
+cuándo
+cómo
+como
+algo
+alguien
+todo
+nada
+mismo
+misma
+mismos
+mismas
+-------------
 a
 actualmente
 adelante
@@ -651,3 +957,196 @@ yo
 últimas
 último
 últimos
+------------
+the
+a
+an
+and
+but
+or
+nor
+so
+because
+as
+since
+though
+although
+if
+unless
+when
+where
+while
+of
+in
+on
+at
+for
+from
+by
+with
+without
+over
+under
+through
+about
+into
+out of
+up
+down
+near
+far
+not
+very
+too
+so
+more
+less
+quite
+rather
+already
+yet
+still
+just
+only
+ever
+never
+always
+usually
+often
+sometimes
+seldom
+rarely
+I
+me
+you
+he
+she
+it
+we
+us
+they
+them
+his
+hers
+its
+ours
+theirs
+mine
+yours
+his
+hers
+its
+ours
+theirs
+this
+that
+these
+those
+what
+which
+who
+whom
+whose
+where
+when
+how
+oh
+ah
+yes
+no
+well
+hey
+hello
+goodbye
+wow
+oops
+that
+a
+an
+the
+of
+in
+on
+for
+with
+by
+at
+it
+he
+she
+they
+me
+you
+we
+his
+her
+its
+my
+your
+our
+their
+this
+that
+these
+those
+what
+which
+who
+whom
+whose
+where
+when
+how
+same
+according to
+along with
+apart from
+aside from
+because of
+due to
+instead of
+in spite of
+on account of
+out of
+be
+have
+do
+does
+did
+will
+would
+shall
+should
+can
+could
+may
+might
+must
+can
+could
+may
+might
+must
+shall
+should
+will
+would
+you know
+I mean
+for example
+in other words
+etc.
+in order to
+for the purpose of
+with the intention of
+inch
+foot
+yard
+mile
+pound
+ounce
+gallon
+liter
+meter
+kilometer
+gram
