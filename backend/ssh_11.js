@@ -149,6 +149,7 @@ const filterStopwords = async (words) => {
 //   const fileContent = await fetchFileContent();
 //   let results = processResults(fileContent);
 //   results = await filterStopwords(results);
+//   results = results.slice(0, 20);
 //   await cleanUpResources();
 //   logMessage('Proceso completado. Devolviendo resultado.');
 //   return results;
