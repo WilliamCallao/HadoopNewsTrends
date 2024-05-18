@@ -21,7 +21,7 @@ export const App = () => {
 
   useEffect(() => {
     if (selectedWord) {
-      const filtered = news.filter((article: any) => 
+      const filtered = news.filter((article: any) =>
         article.Cuerpo.toLowerCase().includes(selectedWord.toLowerCase())
       ).sort((a, b) => {
         const aCount = (a.Cuerpo.toLowerCase().match(new RegExp(selectedWord.toLowerCase(), 'g')) || []).length;
@@ -54,6 +54,9 @@ export const App = () => {
     try {
       // Primer endpoint: obtener las noticias
       const response = await fetch(`http://localhost:3001/news?startDate=${formattedStartDate}&endDate=${formattedEndDate}`);
+      if (!response.ok) {
+        throw new Error('Error al conectar con el backend para obtener noticias');
+      }
       const data = await response.json();
       console.log('Response from server:', data);
       setNews(data);
@@ -66,6 +69,9 @@ export const App = () => {
         },
         body: JSON.stringify({ articles: data }),
       });
+      if (!response2.ok) {
+        throw new Error('Error al conectar con el backend para concatenar textos');
+      }
       const result = await response2.json();
       console.log('Concatenated Text:', result.concatenatedText);
 
@@ -77,12 +83,16 @@ export const App = () => {
         },
         body: JSON.stringify({ text: result.concatenatedText }),
       });
+      if (!response3.ok) {
+        throw new Error('Error al conectar con la máquina virtual para procesar el texto');
+      }
       const processedData = await response3.json();
       console.log('Processed Text Response:', processedData);
       setProcessedText(processedData.result);
       setWords(processedData.result.map((item: ProcessedTextItem) => `Palabra: ${item.palabra}, Frecuencia: ${item.frecuencia}`));
     } catch (error) {
       console.error('Error:', error);
+      alert(`Ha ocurrido un error: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
