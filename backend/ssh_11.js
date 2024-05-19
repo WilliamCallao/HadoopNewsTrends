@@ -143,36 +143,36 @@ const filterStopwords = async (words) => {
   return words.filter(word => !stopwordsSet.has(word.palabra));
 };
 
-const executeWorkflow = async (text) => {
-  logMessage('Iniciando el flujo de trabajo con el texto proporcionado...');
-  await uploadAndProcessFile(text);
-  const fileContent = await fetchFileContent();
-  let results = processResults(fileContent);
-  results = await filterStopwords(results);
-  results = results.slice(0, 20);
-  await cleanUpResources();
-  logMessage('Proceso completado. Devolviendo resultado.');
-  return results;
-};
+// const executeWorkflow = async (text) => {
+//   logMessage('Iniciando el flujo de trabajo con el texto proporcionado...');
+//   await uploadAndProcessFile(text);
+//   const fileContent = await fetchFileContent();
+//   let results = processResults(fileContent);
+//   results = await filterStopwords(results);
+//   results = results.slice(0, 20);
+//   await cleanUpResources();
+//   logMessage('Proceso completado. Devolviendo resultado.');
+//   return results;
+// };
 
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-// const executeWorkflow = async (text) => {
-//   await delay(2000);
-//   const words = text.split(/\s+/);
-//   const wordCount = {};
-//   words.forEach(word => {
-//     const lowerCaseWord = word.toLowerCase();
-//     wordCount[lowerCaseWord] = (wordCount[lowerCaseWord] || 0) + 1;
-//   });
-//   const wordArray = Object.keys(wordCount).map(word => ({
-//     palabra: word,
-//     frecuencia: wordCount[word]
-//   }));
-//   wordArray.sort((a, b) => b.frecuencia - a.frecuencia);
-//   const filteredResults = await filterStopwords(wordArray);
-//   return filteredResults.slice(0, 20);
-// };
+const executeWorkflow = async (text) => {
+  await delay(2000);
+  const words = text.split(/\s+/);
+  const wordCount = {};
+  words.forEach(word => {
+    const lowerCaseWord = word.toLowerCase();
+    wordCount[lowerCaseWord] = (wordCount[lowerCaseWord] || 0) + 1;
+  });
+  const wordArray = Object.keys(wordCount).map(word => ({
+    palabra: word,
+    frecuencia: wordCount[word]
+  }));
+  wordArray.sort((a, b) => b.frecuencia - a.frecuencia);
+  const filteredResults = await filterStopwords(wordArray);
+  return filteredResults.slice(0, 20);
+};
 
 const logMessage = (message) => {
   console.log(message);

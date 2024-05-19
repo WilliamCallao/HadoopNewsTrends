@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { articlesData } from './data/articles';
 import { ArticleCard } from './components/article-card';
 import { FaSpinner } from 'react-icons/fa';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 type ProcessedTextItem = {
   palabra: string;
@@ -18,6 +20,8 @@ export const App = () => {
   const [endDate, setEndDate] = useState<string>('');
   const [processedText, setProcessedText] = useState<ProcessedTextItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [initialLoad, setInitialLoad] = useState<boolean>(true);
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
 
   useEffect(() => {
     if (selectedWord) {
@@ -33,11 +37,9 @@ export const App = () => {
       setFilteredArticles(news);
     }
   }, [selectedWord, news]);
-
   const onChangeSelectedWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedWord(e.target.value);
   };
-
   const formatDateString = (date: string) => {
     const [year, month, day] = date.split('-');
     return `${day}-${month}-${year}`;
@@ -46,6 +48,7 @@ export const App = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setIsAnimating(true);
     setProcessedText([]);
     const formattedStartDate = formatDateString(startDate);
     const formattedEndDate = formatDateString(endDate);
@@ -95,6 +98,7 @@ export const App = () => {
       alert(`Ha ocurrido un error: ${error.message}`);
     } finally {
       setIsLoading(false);
+      setInitialLoad(false);
     }
   };
 
@@ -140,34 +144,52 @@ export const App = () => {
           <h3 className="mb-2 text-lg font-medium text-gray-900">
             Palabras encontradas
           </h3>
-          <ul className="grid gap-1">
-            {processedText.map((wordObj, index) => (
-              <li key={index}>
-                <label className="flex items-center gap-1">
-                  <input
-                    className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                    id={`word-${wordObj.palabra}`}
-                    type="radio"
-                    value={wordObj.palabra}
-                    onChange={onChangeSelectedWord}
-                    checked={selectedWord === wordObj.palabra}
-                  />
-                  <span className="ms-2 font-medium text-gray-900">{`${wordObj.palabra} (${wordObj.frecuencia})`}</span>
-                </label>
-              </li>
-            ))}
+          <ul className="grid gap-1 h-screen overflow-y-auto">
+            {(isLoading || initialLoad) ? (
+              <SkeletonTheme color="#f0f0f0" highlightColor="#e0e0e0" duration={isAnimating ? 1.2 : 0}>
+                {Array(20).fill().map((_, index) => (
+                  <li key={index}>
+                    <Skeleton height={24} />
+                  </li>
+                ))}
+              </SkeletonTheme>
+            ) : (
+              processedText.map((wordObj, index) => (
+                <li key={index}>
+                  <label className="flex items-center gap-1">
+                    <input
+                      className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                      id={`word-${wordObj.palabra}`}
+                      type="radio"
+                      value={wordObj.palabra}
+                      onChange={onChangeSelectedWord}
+                      checked={selectedWord === wordObj.palabra}
+                    />
+                    <span className="ms-2 font-medium text-gray-900">{`${wordObj.palabra} (${wordObj.frecuencia})`}</span>
+                  </label>
+                </li>
+              ))
+            )}
           </ul>
         </aside>
         <div className="mb-5 grid gap-5">
-          {filteredArticles.map((article: any, index: number) => (
-            <ArticleCard key={index} article={{
-              id: article.URL,
-              title: article.Titulo,
-              content: article.Cuerpo,
-              date: article.fecha,
-              source: article.Pagina
-            }} />
-          ))}
+          {(isLoading || initialLoad) ? (
+            <SkeletonTheme color="#f0f0f0" highlightColor="#e0e0e0" duration={isAnimating ? 1.2 : 0}>
+              {Array(3).fill().map((_, index) => (
+                <Skeleton key={index} height={200} />
+              ))}
+            </SkeletonTheme>
+          ) : (
+            filteredArticles.map((article: any, index: number) => (
+              <ArticleCard key={index} article={{
+                id: article.URL,
+                title: article.Titulo,
+                content: article.Cuerpo,
+                date: article.fecha,
+                source: article.Pagina
+              }} />
+            ))
+          )}
         </div>
       </section>
     </main>
