@@ -37,11 +37,9 @@ export const App = () => {
       setFilteredArticles(news);
     }
   }, [selectedWord, news]);
-
   const onChangeSelectedWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedWord(e.target.value);
   };
-
   const formatDateString = (date: string) => {
     const [year, month, day] = date.split('-');
     return `${day}-${month}-${year}`;
@@ -50,7 +48,7 @@ export const App = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
-    setIsAnimating(true); // Activar animación al enviar
+    setIsAnimating(true);
     setProcessedText([]);
     const formattedStartDate = formatDateString(startDate);
     const formattedEndDate = formatDateString(endDate);
