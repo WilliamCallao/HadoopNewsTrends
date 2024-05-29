@@ -37,9 +37,17 @@ export const App = () => {
       setFilteredArticles(news);
     }
   }, [selectedWord, news]);
+
+  useEffect(() => {
+    if (processedText.length > 0) {
+      setSelectedWord(processedText[0].palabra);
+    }
+  }, [processedText]);
+
   const onChangeSelectedWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedWord(e.target.value);
   };
+
   const formatDateString = (date: string) => {
     const [year, month, day] = date.split('-');
     return `${day}-${month}-${year}`;
@@ -187,7 +195,7 @@ export const App = () => {
                 content: article.Cuerpo,
                 date: article.fecha,
                 source: article.Pagina
-              }} />
+              }} selectedWord={selectedWord} />
             ))
           )}
         </div>
