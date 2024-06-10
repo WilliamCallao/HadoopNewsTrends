@@ -22,12 +22,16 @@ export const App = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [initialLoad, setInitialLoad] = useState<boolean>(true);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [sources, setSources] = useState<string[]>([]);
+  const [selectedSource, setSelectedSource] = useState<string>('');
 
   useEffect(() => {
-    if (selectedWord) {
-      const filtered = news.filter((article: any) =>
-        article.Cuerpo.toLowerCase().includes(selectedWord.toLowerCase())
-      ).sort((a, b) => {
+    if (selectedWord || selectedSource) {
+      const filtered = news.filter((article: any) => {
+        const matchesWord = selectedWord ? article.Cuerpo.toLowerCase().includes(selectedWord.toLowerCase()) : true;
+        const matchesSource = selectedSource ? article.Pagina === selectedSource : true;
+        return matchesWord && matchesSource;
+      }).sort((a, b) => {
         const aCount = (a.Cuerpo.toLowerCase().match(new RegExp(selectedWord.toLowerCase(), 'g')) || []).length;
         const bCount = (b.Cuerpo.toLowerCase().match(new RegExp(selectedWord.toLowerCase(), 'g')) || []).length;
         return bCount - aCount;
@@ -36,7 +40,7 @@ export const App = () => {
     } else {
       setFilteredArticles(news);
     }
-  }, [selectedWord, news]);
+  }, [selectedWord, selectedSource, news]);
 
   useEffect(() => {
     if (processedText.length > 0) {
@@ -44,8 +48,17 @@ export const App = () => {
     }
   }, [processedText]);
 
+  useEffect(() => {
+    const uniqueSources = Array.from(new Set(news.map(article => article.Pagina)));
+    setSources(uniqueSources);
+  }, [news]);
+
   const onChangeSelectedWord = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedWord(e.target.value);
+  };
+
+  const onChangeSelectedSource = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedSource(e.target.value);
   };
 
   const formatDateString = (date: string) => {
@@ -134,6 +147,24 @@ export const App = () => {
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
+          {processedText.length > 0 && (
+            <div className="flex flex-col">
+              <label htmlFor="source">Fuente</label>
+              <select
+                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                id="source"
+                value={selectedSource}
+                onChange={onChangeSelectedSource}
+              >
+                <option value="">Todas las fuentes</option>
+                {sources.map((source, index) => (
+                  <option key={index} value={source}>
+                    {source}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
           <button
             className="w-full cursor-pointer rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 sm:w-40"
             type="submit"
