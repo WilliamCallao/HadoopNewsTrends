@@ -76,7 +76,6 @@ export const App = () => {
     console.log(`Fecha Inicial: ${formattedStartDate}`);
     console.log(`Fecha Final: ${formattedEndDate}`);
     try {
-      // Primer endpoint: obtener las noticias
       const response = await fetch(`http://localhost:3001/news?startDate=${formattedStartDate}&endDate=${formattedEndDate}`);
       if (!response.ok) {
         throw new Error('Error al conectar con el backend para obtener noticias');
@@ -85,7 +84,6 @@ export const App = () => {
       console.log('Response from server:', data);
       setNews(data);
 
-      // Segundo endpoint: obtener la cadena concatenada
       const response2 = await fetch('http://localhost:3001/concatenate-texts', {
         method: 'POST',
         headers: {
@@ -99,7 +97,6 @@ export const App = () => {
       const result = await response2.json();
       console.log('Concatenated Text:', result.concatenatedText);
 
-      // Llamar al endpoint process-text con el texto concatenado
       const response3 = await fetch('http://localhost:3001/process-text', {
         method: 'POST',
         headers: {
@@ -124,13 +121,14 @@ export const App = () => {
   };
 
   return (
-    <main className="container mx-auto mt-5 min-h-screen">
-      <header>
-        <form className="flex items-end gap-5" onSubmit={handleSubmit}>
+    <main className="h-screen bg-[#EBEBEB] p-2 overflow-hidden">
+      <header className="mb-5 p-5 bg-white shadow-lg rounded-lg">
+        <h1 className="text-2xl font-bold text-center mb-0">Análisis de Noticias</h1>
+        <form className="flex flex-wrap items-end justify-center gap-5" onSubmit={handleSubmit}>
           <div className="flex flex-col">
-            <label htmlFor="startDate">Fecha Inicial</label>
+            <label htmlFor="startDate" className="font-medium text-gray-700">Fecha Inicial</label>
             <input
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               id="startDate"
               type="date"
               value={startDate}
@@ -138,9 +136,9 @@ export const App = () => {
             />
           </div>
           <div className="flex flex-col">
-            <label htmlFor="endDate">Fecha Final</label>
+            <label htmlFor="endDate" className="font-medium text-gray-700">Fecha Final</label>
             <input
-              className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
               id="endDate"
               type="date"
               value={endDate}
@@ -149,9 +147,9 @@ export const App = () => {
           </div>
           {processedText.length > 0 && (
             <div className="flex flex-col">
-              <label htmlFor="source">Fuente</label>
+              <label htmlFor="source" className="font-medium text-gray-700">Fuente</label>
               <select
-                className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                className="block w-full rounded-lg border border-gray-300 bg-white p-2.5 text-sm text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                 id="source"
                 value={selectedSource}
                 onChange={onChangeSelectedSource}
@@ -178,12 +176,10 @@ export const App = () => {
           </button>
         </form>
       </header>
-      <section className="mt-5 grid grid-cols-[250px_1fr] gap-5">
-        <aside className="sticky top-5 h-fit rounded-lg border border-gray-300 bg-gray-50 p-5">
-          <h3 className="mb-2 text-lg font-medium text-gray-900">
-            Palabras encontradas
-          </h3>
-          <ul className="grid gap-1 h-screen overflow-y-auto">
+      <section className="mt-5 grid grid-cols-1 md:grid-cols-[300px_1fr] gap-5 h-full">
+        <aside className="sticky top-5 h-full rounded-lg border border-gray-300 bg-white p-5 shadow-lg overflow-y-auto">
+          <h3 className="mb-3 text-xl font-medium text-gray-900">Palabras encontradas</h3>
+          <ul className="grid gap-2">
             {(isLoading || initialLoad) ? (
               <SkeletonTheme color="#f0f0f0" highlightColor="#e0e0e0" duration={isAnimating ? 1.2 : 0}>
                 {Array(20).fill().map((_, index) => (
@@ -195,7 +191,7 @@ export const App = () => {
             ) : (
               processedText.map((wordObj, index) => (
                 <li key={index}>
-                  <label className="flex items-center gap-1">
+                  <label className="flex items-center gap-2">
                     <input
                       className="h-4 w-4 border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500"
                       id={`word-${wordObj.palabra}`}
@@ -204,33 +200,36 @@ export const App = () => {
                       onChange={onChangeSelectedWord}
                       checked={selectedWord === wordObj.palabra}
                     />
-                    <span className="ms-2 font-medium text-gray-900">{`${wordObj.palabra} (${wordObj.frecuencia})`}</span>
+                    <span className="font-medium text-gray-900">{`${wordObj.palabra} (${wordObj.frecuencia})`}</span>
                   </label>
                 </li>
               ))
             )}
           </ul>
         </aside>
-        <div className="mb-5 grid gap-5">
-          {(isLoading || initialLoad) ? (
-            <SkeletonTheme color="#f0f0f0" highlightColor="#e0e0e0" duration={isAnimating ? 1.2 : 0}>
-              {Array(3).fill().map((_, index) => (
-                <Skeleton key={index} height={200} />
-              ))}
-            </SkeletonTheme>
-          ) : (
-            filteredArticles.map((article: any, index: number) => (
-              <ArticleCard key={index} article={{
-                id: article.URL,
-                title: article.Titulo,
-                content: article.Cuerpo,
-                date: article.fecha,
-                source: article.Pagina
-              }} selectedWord={selectedWord} />
-            ))
-          )}
+        <div className="h-full rounded-lg border border-gray-300 bg-white p-5 shadow-lg overflow-y-auto">
+          <div className="grid gap-5">
+            {(isLoading || initialLoad) ? (
+              <SkeletonTheme color="#f0f0f0" highlightColor="#e0e0e0" duration={isAnimating ? 1.2 : 0}>
+                {Array(3).fill().map((_, index) => (
+                  <Skeleton key={index} height={200} />
+                ))}
+              </SkeletonTheme>
+            ) : (
+              filteredArticles.map((article: any, index: number) => (
+                <ArticleCard key={index} article={{
+                  id: article.URL,
+                  title: article.Titulo,
+                  content: article.Cuerpo,
+                  date: article.fecha,
+                  source: article.Pagina
+                }} selectedWord={selectedWord} />
+              ))
+            )}
+          </div>
         </div>
       </section>
     </main>
   );
+  
 };
