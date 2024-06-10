@@ -143,6 +143,8 @@ const filterStopwords = async (words) => {
   return words.filter(word => !stopwordsSet.has(word.palabra));
 };
 
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 const executeWorkflow = async (text) => {
   logMessage('Iniciando el flujo de trabajo con el texto proporcionado...');
   await uploadAndProcessFile(text);
@@ -155,9 +157,8 @@ const executeWorkflow = async (text) => {
   return results;
 };
 
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 // const executeWorkflow = async (text) => {
+//   logMessage('Iniciandoo...');
 //   await delay(2000);
 //   const words = text.split(/\s+/);
 //   const wordCount = {};

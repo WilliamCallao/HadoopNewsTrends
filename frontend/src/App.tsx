@@ -4,6 +4,7 @@ import { ArticleCard } from './components/article-card';
 import { FaSpinner } from 'react-icons/fa';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
+import toast, { Toaster } from 'react-hot-toast';
 
 type ProcessedTextItem = {
   palabra: string;
@@ -24,6 +25,32 @@ export const App = () => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [sources, setSources] = useState<string[]>([]);
   const [selectedSource, setSelectedSource] = useState<string>('');
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:3001');
+    
+    ws.onopen = () => {
+      console.log('Conectado al servidor WebSocket');
+    };
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'log') {
+        console.log('Mensaje del servidor:', data.message);
+        toast(data.message, {
+          duration: 6000,
+        });
+      }
+    };
+
+    ws.onclose = () => {
+      console.log('Desconectado del servidor WebSocket');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedWord || selectedSource) {
@@ -229,7 +256,7 @@ export const App = () => {
           </div>
         </div>
       </section>
+      <Toaster position="bottom-right" reverseOrder={false} />
     </main>
   );
-  
 };
