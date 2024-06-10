@@ -37,9 +37,14 @@ export const App = () => {
       const data = JSON.parse(event.data);
       if (data.type === 'log') {
         console.log('Mensaje del servidor:', data.message);
-        toast(data.message, {
-          duration: 6000,
-        });
+        if (!data.message.includes('GC time elapsed') &&
+            !data.message.includes('CPU time spent') &&
+            !data.message.includes('Physical memory (bytes)') &&
+            !data.message.includes('Virtual memory (bytes)')) {
+          toast(data.message, {
+            duration: 6000,
+          });
+        }
       }
     };
 
