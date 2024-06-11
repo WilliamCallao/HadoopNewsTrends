@@ -94,6 +94,9 @@ export const App = () => {
   };
 
   const formatDateString = (date: string) => {
+    if (date.match(/^\d{2}-\d{2}-\d{4}$/)) {
+      return date;
+    }
     const [year, month, day] = date.split('-');
     return `${day}-${month}-${year}`;
   };
@@ -114,14 +117,19 @@ export const App = () => {
       }
       const data = await response.json();
       console.log('Response from server:', data);
-      setNews(data);
+
+      const formattedData = data.map(article => ({
+        ...article,
+        fecha: formatDateString(article.fecha)
+      }));
+      setNews(formattedData);
 
       const response2 = await fetch('http://localhost:3001/concatenate-texts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ articles: data }),
+        body: JSON.stringify({ articles: formattedData }),
       });
       if (!response2.ok) {
         throw new Error('Error al conectar con el backend para concatenar textos');

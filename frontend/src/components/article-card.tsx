@@ -29,6 +29,11 @@ export const ArticleCard = ({ article, selectedWord }: Props) => {
     console.log("ssss", article);
   };
 
+  const formatDateString = (date: string) => {
+    const [day, month, year] = date.split('-');
+    return `${day}-${month}-${year}`;
+  };
+
   return (
     <article
       key={article.id}
@@ -52,7 +57,7 @@ export const ArticleCard = ({ article, selectedWord }: Props) => {
 
       <footer className="flex items-center justify-between">
         <small className="text-sm text-gray-600">
-          {article.source} - {new Date(article.date).toLocaleDateString()}
+          {article.source} - {formatDateString(article.date)}
         </small>
         <button
           className="text-sm text-blue-600 hover:underline focus:outline-none"
