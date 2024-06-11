@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-start_date = datetime.strptime("11-04-2022", "%d-%m-%Y")
-end_date = datetime.strptime("30-06-2022", "%d-%m-%Y")
+start_date = datetime.strptime("01-01-2024", "%d-%m-%Y")
+end_date = datetime.strptime("10-01-2024", "%d-%m-%Y")
 base_api_url = "https://eldeber.com.bo/api/news/getMoreLastNews?date="
 csv_file = "el-deber.csv"
 days_per_thread = 3
