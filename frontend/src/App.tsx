@@ -11,10 +11,19 @@ type ProcessedTextItem = {
   frecuencia: number;
 };
 
+const removeDuplicates = (articles) => {
+  const seenTitles = new Set();
+  return articles.filter(article => {
+    const isDuplicate = seenTitles.has(article.Titulo);
+    seenTitles.add(article.Titulo);
+    return !isDuplicate;
+  });
+};
+
 export const App = () => {
   const [words, setWords] = useState<string[]>([]);
   const [selectedWord, setSelectedWord] = useState<string>('');
-  const [articles, setArticles] = useState(articlesData);
+  const [articles, setArticles] = useState(removeDuplicates(articlesData));
   const [filteredArticles, setFilteredArticles] = useState<any[]>([]);
   const [news, setNews] = useState<any[]>([]);
   const [startDate, setStartDate] = useState<string>('');
@@ -118,10 +127,10 @@ export const App = () => {
       const data = await response.json();
       console.log('Response from server:', data);
 
-      const formattedData = data.map(article => ({
+      const formattedData = removeDuplicates(data.map(article => ({
         ...article,
         fecha: formatDateString(article.fecha)
-      }));
+      })));
       setNews(formattedData);
 
       const response2 = await fetch('http://localhost:3001/concatenate-texts', {
