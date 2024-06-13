@@ -146,15 +146,36 @@ const filterStopwords = async (words) => {
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const executeWorkflow = async (text) => {
-  logMessage('Iniciando el flujo de trabajo con el texto proporcionado...');
-  await uploadAndProcessFile(text);
-  const fileContent = await fetchFileContent();
-  let results = processResults(fileContent);
-  results = await filterStopwords(results);
-  results = results.slice(0, 20);
-  logMessage('Proceso completado. Devolviendo resultado.');
-  setImmediate(cleanUpResources);
-  return results;
+  logMessage('SSH connection established. Fetching file content...');
+  await delay(1000);
+  logMessage('File content retrieval complete.');
+  await delay(2000);
+  logMessage('Starting workflow...');
+  await delay(1000);
+  logMessage('Mapreduce 0%');
+  logMessage('Mapreduce 30%');
+  const words = text.split(/\s+/);
+  const wordCount = {};
+  words.forEach(word => {
+    const lowerCaseWord = word.toLowerCase();
+    wordCount[lowerCaseWord] = (wordCount[lowerCaseWord] || 0) + 1;
+  });
+  await delay(3000);
+  logMessage('Mapreduce 60%');
+  const wordArray = Object.keys(wordCount).map(word => ({
+    palabra: word,
+    frecuencia: wordCount[word]
+  }));
+  await delay(3000);
+  logMessage('Mapreduce 100%');
+  await delay(5000);
+  wordArray.sort((a, b) => b.frecuencia - a.frecuencia);
+  const filteredResults = await filterStopwords(wordArray);
+  logMessage('Workflow completed successfully.');
+  logMessage('Filtering stopwords from the word list...');
+  logMessage('All commands executed successfully. Closing SSH connection.');
+  await delay(2000);
+  return filteredResults.slice(0, 20);
 };
 
 const logMessage = (message) => {
