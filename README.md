@@ -20,6 +20,8 @@ Este proyecto tiene como objetivo analizar las tendencias en noticias utilizando
 
 El proyecto cuenta con una interfaz web desarrollada en React/JavaScript. La interfaz se conecta mediante SSH al entorno virtualizado de CentOS7 para realizar las operaciones de análisis que permitan identificar la noticia más relevante en un intervalo de tiempo.
 
+![image](https://github.com/WilliamCallao/HadoopNewsTrends/assets/96638909/6812dc31-bdbd-4c72-a05c-caa6a1d091cb)
+
 ### Tecnologías Utilizadas
 
 - Hadoop (MapReduce)
@@ -41,7 +43,24 @@ El proyecto cuenta con una interfaz web desarrollada en React/JavaScript. La int
    hdfs dfs -mkdir /input
    ```
 
-## Uso del Proyecto
+### Incluir Archivos CSV
+
+Los archivos CSV necesarios para el proyecto se pueden descargar del siguiente enlace y deben colocarse en la carpeta `backend/data`:
+
+[Enlace para descargar archivos CSV](https://www.dropbox.com/scl/fo/mww7k6ku3oti01oe001zc/AL1U1OpZkds_qPIJZtgsBdI?rlkey=kpk075pqilahf1a8ezw1ngw4n&st=bvfshf6v&dl=0)
+
+Para incluir los archivos en la carpeta `backend/data`, sigue estos pasos:
+
+1. Descarga los archivos CSV desde el enlace proporcionado.
+2. Copia los archivos descargados a la carpeta `backend/data` de tu proyecto.
+
+### Descargar la Máquina Virtual CentOS
+
+Puedes descargar el archivo .OVA de CentOS pre-configurado, que ya contiene la carpeta `input`, desde el siguiente enlace:
+
+[Enlace para descargar CentOS .OVA](https://www.dropbox.com/scl/fi/8y92r1bt0d7ryq2rdtvvv/CentOS-7-W.ova?rlkey=ssh9zufuecpuoxkcwsemi6ji8&st=ukhfs6wj&dl=0)
+
+### Uso del Proyecto
 
 ### Iniciar el Entorno de Hadoop (En la Terminal de CentOS)
 
